@@ -4,11 +4,14 @@
   "description": "Education project",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build:Dev": "webpack --mode=development",
+    "build:Prod": "webpack --mode=production",
+    "build": "webpack"
   },
   "author": "kostiantyn.shylov.work@gmail.com",
   "license": "ISC",
   "devDependencies": {
+    "html-webpack-plugin": "^5.6.0",
     "webpack": "^5.91.0",
     "webpack-cli": "^5.1.4"
   }
