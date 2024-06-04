@@ -1,0 +1,6 @@
+{
+  "gold": {"kx": 0, "ky": 0},
+  "silver": {"kx": 1, "ky": 0},
+  "green": {"kx": 0, "ky": 1},
+  "pink": {"kx": 1, "ky": 1}
+}
