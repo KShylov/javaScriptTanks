@@ -103,7 +103,7 @@ export default class Tank {
     }
       ammunition.push(
         new Snaryad(
-          (option = { typeTank, scale, spead, direction, position, grid })
+          ({ typeTank, scale, spead, direction, position, grid })
         )
       );
   }
