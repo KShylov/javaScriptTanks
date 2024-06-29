@@ -1,8 +1,8 @@
-
+import Snaryad from "./snaryad";
 export default class Tank {
   constructor({ typeTank, scale, spead, direction, position, size, grid }) {
     this.typeTank = typeTank;
-    this.scale = scale * 0.9;
+    this.scale = scale * 0.85;
     this.grid = grid;
     this.spead = spead;
     this.size = size;
@@ -11,13 +11,19 @@ export default class Tank {
     this.direction = direction;
     this.position = position;
     this.spritePosition = {x: 0, y: 0};
+    this.ammunition = [];
   }
   update(key, config) {
+    console.log(key);
     if (key === '')
       this.isMove = false
     else 
     this.isMove = true
     this.moveTank(key, config);
+    this.shot(key);
+    this.ammunition.forEach(element => {
+      element.update()
+    });
   }
 
   getTankByParameters() {
@@ -49,6 +55,9 @@ export default class Tank {
       this.size * this.scale,
       this.size * this.scale
     );
+    this.ammunition.forEach((element) => {
+      element.render(context, sprite);
+    });
   }
 
   moveTank(key, config) {
@@ -69,15 +78,6 @@ export default class Tank {
         this.direction = config.direction.down;
         this.move("y", this.spead, config, key);
         break;
-      case "Escape":
-        if (this.typeTank.level === 7) return;
-        this.typeTank.level++;
-        break;
-      case "Space":
-        if (this.typeTank.level === 0)
-          return;
-        this.typeTank.level--;
-        break;
     }
     this.spritePosition = this.getTankByParameters();
   }
@@ -95,6 +95,17 @@ export default class Tank {
     else if (checkBoard < 0) this.position[axis] = 0;
     else if (checkBoard > config.worldSize - this.size * this.scale)
       this.position[axis] = config.worldSize - this.size * this.scale;
+  }
+
+  shot(key) {
+    if (key !== "Space") {
+      return;
+    }
+      ammunition.push(
+        new Snaryad(
+          (option = { typeTank, scale, spead, direction, position, grid })
+        )
+      );
   }
 
   isCanMove(key) {
@@ -133,7 +144,7 @@ export default class Tank {
       case "ArrowDown":
         return (
           this.grid.isCanMove({
-            nextX: this.position.x + this.size * this.scale,
+            nextX: this.position.x,
             nextY: this.position.y + this.size * this.scale + this.spead,
           }) ||
           this.grid.isCanMove({
