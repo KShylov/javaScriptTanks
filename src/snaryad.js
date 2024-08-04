@@ -1,14 +1,17 @@
 export default class Snaryad {
   constructor({ typeTank, scale, spead, direction, position, grid }) {
     this.typeTank = typeTank;
-    this.scale = scale * 0.85;
+    this.scale = scale;
     this.grid = grid;
     this.spead = spead;
     this.size = 8;
     this.direction = direction;
-    this.position = position;
+    this.position = { ...position};
+    this.calibration();
     this.spritePosition = { x: 0, y: 0 };
+    this.isActive = true;
   }
+
   update(config) {
     this.moveSnaryad(config);
   }
@@ -18,9 +21,9 @@ export default class Snaryad {
     let y = 0;
     return {
       x:
-        x + 320,
+        x + 321 + this.size * this.direction,
       y:
-        y + 96
+        y + 100
     };
   }
 
@@ -39,17 +42,19 @@ export default class Snaryad {
   }
 
   moveSnaryad(config) {
+    console.log("moving snaryad!!!")
+    console.log("direction: " + this.direction)
     switch (this.direction) {
-      case "up":
+      case 0:
         this.move("y", -this.spead, config);
         break;
-      case "right":
+      case 3:
         this.move("x", this.spead, config);
         break;
-      case "left":
+      case 1:
         this.move("x", -this.spead, config);
         break;
-      case "down":
+      case 2:
         this.move("y", this.spead, config);
         break;
     }
@@ -58,6 +63,7 @@ export default class Snaryad {
 
   move(axis, spead, config) {
     if (this.isCanMove()) {
+      console.log("Is can move False")
       return;
     }
     console.log("Is can move true")
@@ -67,9 +73,21 @@ export default class Snaryad {
       checkBoard <= config.worldSize - this.size * this.scale
     )
       this.position[axis] = checkBoard;
-    else if (checkBoard < 0) this.position[axis] = 0;
-    else if (checkBoard > config.worldSize - this.size * this.scale)
+    else if (checkBoard < 0) {
+      this.position[axis] = 0;
+      this.isActive = false;
+    }
+    else if (checkBoard > config.worldSize - this.size * this.scale) {
       this.position[axis] = config.worldSize - this.size * this.scale;
+      this.isActive = false;
+    }
+  }
+
+  calibration() {
+    this.position = {
+      x: this.position.x + this.size / 2 * this.scale,
+      y: this.position.y + this.size / 2 * this.scale
+    }
   }
 
   isCanMove() {
