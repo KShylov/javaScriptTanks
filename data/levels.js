@@ -70,10 +70,14 @@ export default class Levels {
       );
     });
   }
-  isCanMove({nextX, nextY}) {
-    let actualTiles = this.field.find((tile) =>  tile.name !== "wood" &&
+  isCanMove({nextX, nextY, isTank = true}) {
+    let actualTiles = isTank? this.field.find((tile) =>  tile.name !== "wood" &&
       tile.name !== "ice" &&
-      this.isContactWithPoint(tile, nextX, nextY));
+      this.isContactWithPoint(tile, nextX, nextY)) :
+        this.field.find((tile) =>  tile.name !== "wood" &&
+            tile.name !== "ice" &&
+            tile.name !== "water" &&
+            this.isContactWithPoint(tile, nextX, nextY)) ;
     console.log("actualTiles " + actualTiles);
     return actualTiles;
   }

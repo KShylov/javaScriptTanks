@@ -22,7 +22,7 @@ export default class Tank {
     this.moveTank(key, config);
     this.shot(key);
     this.ammunition.forEach(element => {
-      element.update()
+      element.update(config)
     });
   }
 
@@ -55,6 +55,9 @@ export default class Tank {
       this.size * this.scale,
       this.size * this.scale
     );
+    this.ammunition.forEach(element => {
+      element.render(context, sprite)
+    });
   }
 
   moveTank(key, config) {
@@ -98,9 +101,10 @@ export default class Tank {
     if (key !== "Space") {
       return;
     }
-      ammunition.push(
+      this.ammunition.push(
         new Snaryad(
-          ({ typeTank, scale, spead, direction, position, grid })
+          ({ typeTank: this.typeTank, scale: this.scale, spead: this.spead,
+            direction: this.direction, position: this.position, grid: this.grid })
         )
       );
   }
@@ -141,6 +145,7 @@ export default class Tank {
       case "ArrowDown":
         return (
           this.grid.isCanMove({
+            nextX: this.position.x,
             nextY: this.position.y + this.size * this.scale + this.spead,
           }) ||
           this.grid.isCanMove({
