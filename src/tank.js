@@ -7,6 +7,7 @@ export default class Tank {
     this.spead = spead;
     this.size = size;
     this.isMove = false;
+    this.canShoot = true;
     this.animation = 0;
     this.direction = direction;
     this.position = position;
@@ -17,13 +18,19 @@ export default class Tank {
     console.log(key);
     if (key === '')
       this.isMove = false
-    else 
-    this.isMove = true
+    else if (key !== "Space") {
+      this.isMove = true
+    }
     this.moveTank(key, config);
-    this.shot(key);
+    this.tryToShoot(key);
+    this.removeNotActiveStaryads();
     this.ammunition.forEach(element => {
-      element.update()
+      element.update(config)
     });
+  }
+
+  removeNotActiveStaryads() {
+    this.ammunition = this.ammunition.filter(el => el.isActive);
   }
 
   getTankByParameters() {
@@ -55,6 +62,9 @@ export default class Tank {
       this.size * this.scale,
       this.size * this.scale
     );
+    this.ammunition.forEach(element => {
+      element.render(context, sprite)
+    });
   }
 
   moveTank(key, config) {
@@ -94,13 +104,27 @@ export default class Tank {
       this.position[axis] = config.worldSize - this.size * this.scale;
   }
 
-  shot(key) {
+  tryToShoot(key) {
     if (key !== "Space") {
       return;
     }
-      ammunition.push(
+      if (this.canShoot) {
+          this.shot(key)
+          this.canShoot = false; // Запрещаем стрельбу
+          // Устанавливаем задержку в 3 секунды (3000 миллисекунд) перед разрешением следующего выстрела
+          setTimeout(() => {
+              this.canShoot = true;
+              console.log('Теперь можно снова стрелять.');}, 500);
+      } else {
+          console.log('Слишком рано для следующего выстрела.');
+      }
+  }
+
+  shot(key) {
+      this.ammunition.push(
         new Snaryad(
-          ({ typeTank, scale, spead, direction, position, grid })
+          ({ typeTank: this.typeTank, scale: this.scale, spead: this.spead,
+            direction: this.direction, position: this.position, grid: this.grid })
         )
       );
   }
@@ -141,6 +165,7 @@ export default class Tank {
       case "ArrowDown":
         return (
           this.grid.isCanMove({
+            nextX: this.position.x,
             nextY: this.position.y + this.size * this.scale + this.spead,
           }) ||
           this.grid.isCanMove({
