@@ -109,7 +109,7 @@ export default class Tank {
       return;
     }
       if (this.canShoot) {
-          this.shot(key)
+          this.shoot()
           this.canShoot = false; // Запрещаем стрельбу
           // Устанавливаем задержку в 3 секунды (3000 миллисекунд) перед разрешением следующего выстрела
           setTimeout(() => {
@@ -120,7 +120,7 @@ export default class Tank {
       }
   }
 
-  shot(key) {
+  shoot() {
       this.ammunition.push(
         new Snaryad(
           ({ typeTank: this.typeTank, scale: this.scale, spead: this.spead,

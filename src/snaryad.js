@@ -42,8 +42,6 @@ export default class Snaryad {
   }
 
   moveSnaryad(config) {
-    console.log("moving snaryad!!!")
-    console.log("direction: " + this.direction)
     switch (this.direction) {
       case 0:
         this.move("y", -this.spead, config);
@@ -63,10 +61,9 @@ export default class Snaryad {
 
   move(axis, spead, config) {
     if (this.isCanMove()) {
-      console.log("Is can move False")
+      this.isActive = false;
       return;
     }
-    console.log("Is can move true")
     let checkBoard = this.position[axis] + spead;
     if (
       checkBoard >= 0 &&
@@ -92,48 +89,56 @@ export default class Snaryad {
 
   isCanMove() {
     switch (this.direction) {
-      case "up":
+      case 0:
         return (
           this.grid.isCanMove({
             nextX: this.position.x,
             nextY: this.position.y - this.spead,
+            isTank: false
           }) ||
           this.grid.isCanMove({
             nextX: this.position.x + this.size * this.scale,
             nextY: this.position.y - this.spead,
+            isTank: false
           })
         );
-      case "right":
+      case 3:
         return (
           this.grid.isCanMove({
             nextX: this.position.x + this.size * this.scale + this.spead,
             nextY: this.position.y,
+            isTank: false
           }) ||
           this.grid.isCanMove({
             nextX: this.position.x + this.size * this.scale + this.spead,
             nextY: this.position.y + this.size * this.scale,
+            isTank: false
           })
         );
-      case "left":
+      case 1:
         return (
           this.grid.isCanMove({
             nextX: this.position.x - this.spead,
             nextY: this.position.y,
+            isTank: false
           }) ||
           this.grid.isCanMove({
             nextX: this.position.x - this.spead,
             nextY: this.position.y + this.size * this.scale,
+            isTank: false
           })
         );
-      case "down":
+      case 2:
         return (
           this.grid.isCanMove({
             nextX: this.position.x,
             nextY: this.position.y + this.size * this.scale + this.spead,
+            isTank: false
           }) ||
           this.grid.isCanMove({
             nextX: this.position.x + this.size * this.scale,
             nextY: this.position.y + this.size * this.scale + this.spead,
+            isTank: false
           })
         );
     }

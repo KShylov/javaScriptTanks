@@ -77,9 +77,24 @@ export default class Levels {
         this.field.find((tile) =>  tile.name !== "wood" &&
             tile.name !== "ice" &&
             tile.name !== "water" &&
-            this.isContactWithPoint(tile, nextX, nextY)) ;
-    console.log("actualTiles " + actualTiles);
+            this.isContactWithPoint(tile, nextX, nextY));
+    if (actualTiles && !isTank) {
+      console.log("actualTiles: " + JSON.stringify(actualTiles));
+      this.deliteTile(actualTiles)
+    }
     return actualTiles;
+  }
+
+  deliteTile(tile) {
+    let index = 0;
+    let result;
+    this.field.forEach(function (checkedEl) {
+      if (checkedEl.px == tile.px && checkedEl.py == tile.py) {
+        result = index;
+      }
+      index++;
+    });
+    this.field[result] = {px: tile.px, py: tile.py};
   }
 
   isContactWithPoint(tile, nextX, nextY) {
